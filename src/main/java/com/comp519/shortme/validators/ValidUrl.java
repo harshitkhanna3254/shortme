@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = {})
 @Documented
 public @interface ValidUrl {
-    String message() default "Invalid URL";
+    String message() default "The provided URL is invalid. It must start with http:// or https://";
 
     Class<?>[] groups() default {};
 
