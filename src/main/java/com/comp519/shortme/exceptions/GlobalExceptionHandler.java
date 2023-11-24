@@ -1,37 +1,48 @@
 package com.comp519.shortme.exceptions;
 
+import com.comp519.shortme.models.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.MalformedURLException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        // Extract error details from the binding result
+    public ResponseEntity<ExceptionResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        ExceptionResponse errorResponse = new ExceptionResponse(
+                "Validation Error",
+                errorMessage,
+                HttpStatus.BAD_REQUEST.value()
+        );
 
-        // You could inspect the error message or the field to determine if it's a URL error
-        if(errorMessage.startsWith("Invalid URL")) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("error", "Invalid URL provided");
-            response.put("details", errorMessage);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-
-        // Handle other validation errors generically
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    // Generic exception handler
+    @ExceptionHandler(MalformedURLException.class)
+    public ResponseEntity<ExceptionResponse> handleMalformedURLException(MalformedURLException ex) {
+        ExceptionResponse errorResponse = new ExceptionResponse(
+                "Invalid URL",
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.value()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception ex) {
-        return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
+        ExceptionResponse errorResponse = new ExceptionResponse(
+                "Internal Server Error",
+                "An unexpected error occurred: " + ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

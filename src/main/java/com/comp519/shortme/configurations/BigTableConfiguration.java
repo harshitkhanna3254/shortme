@@ -19,6 +19,13 @@ public class BigTableConfiguration {
     @Value("${spring.cloud.gcp.bigtable.instance-id}")
     private String instanceId;
 
+    /* Imported just to print. No use here */
+    @Value("${bigtable.tables.urlmappings}")
+    private String urlMappingsTable;
+
+    @Value("${bigtable.tables.urlmappings.family}")
+    private String columnFamily;
+
     @Bean
     public CommandLineRunner commandLineRunner() {
         System.out.println("Command Line Runner");
@@ -27,7 +34,7 @@ public class BigTableConfiguration {
             if (credentialsPath == null) {
                 throw new IllegalStateException("GOOGLE_APPLICATION_CREDENTIALS environment variable is not set.");
             }
-            System.out.println("GOOGLE_APPLICATION_CREDENTIALS is set to: " + credentialsPath);
+//            System.out.println("GOOGLE_APPLICATION_CREDENTIALS is set to: " + credentialsPath);
             File credentialsFile = new File(credentialsPath);
             if (!credentialsFile.exists()) {
                 throw new IllegalStateException("The credentials file does not exist at: " + credentialsPath);
@@ -37,8 +44,10 @@ public class BigTableConfiguration {
 
     @Bean
     public BigtableDataClient bigtableDataClient() throws IOException {
-        System.out.println(projectId);
-        System.out.println(instanceId);
+        System.out.println("GCloud project Id: " + projectId);
+        System.out.println("BigTable Instance Id: " + instanceId);
+        System.out.println("URL Table Name: " + urlMappingsTable);
+        System.out.println("Column Family: " + columnFamily);
 
         BigtableDataSettings settings = BigtableDataSettings.newBuilder()
                 .setProjectId(projectId)

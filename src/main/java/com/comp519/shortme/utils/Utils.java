@@ -1,8 +1,11 @@
 package com.comp519.shortme.utils;
 
+import com.comp519.shortme.exceptions.InvalidUrlException;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -13,6 +16,18 @@ public class Utils {
         UUID uuid = UUID.randomUUID();
         String base62Uuid = toBase62(uuid);
         return pickRandom7Chars(base62Uuid);
+    }
+
+    public String retrieveShortLinkFromUrl(String shortUrl) throws MalformedURLException {
+        // Convert URL String to a URL Object
+
+        URL url = new URL(shortUrl);
+        String path = url.getPath();
+
+        // Remove the leaving "/"
+        String shortLink = path.substring(1);
+
+        return shortLink;
     }
 
     private final String BASE_62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
