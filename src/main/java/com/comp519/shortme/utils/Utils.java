@@ -19,12 +19,10 @@ public class Utils {
     }
 
     public String retrieveShortLinkFromUrl(String shortUrl) throws MalformedURLException {
-        // Convert URL String to a URL Object
-
         URL url = new URL(shortUrl);
         String path = url.getPath();
 
-        // Remove the leaving "/"
+        // Remove the leaving `/`
         String shortLink = path.substring(1);
 
         return shortLink;

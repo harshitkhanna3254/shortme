@@ -1,10 +1,11 @@
 package com.comp519.shortme.controllers;
 
-import com.comp519.shortme.dto.UrlShortenRequest;
-import com.comp519.shortme.dto.UrlShortenResponse;
+import com.comp519.shortme.dto.UrlShortenRequestDto;
+import com.comp519.shortme.dto.UrlShortenResponseDto;
 import com.comp519.shortme.services.UrlShorteningService;
 import com.comp519.shortme.utils.Utils;
 import com.comp519.shortme.validators.ValidUrl;
+import com.google.api.gax.rpc.NotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class UrlShorteningController {
 
     // API to shorten a URL
     @PostMapping("/shorten")
-    public ResponseEntity<UrlShortenResponse> shorten(@RequestBody @Valid UrlShortenRequest request) {
+    public ResponseEntity<UrlShortenResponseDto> shortenUrl(@RequestBody @Valid UrlShortenRequestDto request) {
         String longUrl = request.getLongUrl();
 
         // Generate the short link
@@ -49,17 +50,15 @@ public class UrlShorteningController {
         System.out.println("Short Url: " + shortUrl);
 
         // Response
-        UrlShortenResponse response = new UrlShortenResponse();
-        response.setShortUrl(shortUrl);
-        response.setLongUrl(longUrl);
-        response.setCreatedAt(timestamp);
+        UrlShortenResponseDto response = new UrlShortenResponseDto(shortUrl, longUrl, timestamp);
 
         return ResponseEntity.ok(response);
     }
 
     // API to retrieve the original URL
     @GetMapping("/retrieve")
-    public ResponseEntity<String> retrieveUrl(@RequestParam @NotBlank @ValidUrl String shortUrl) throws MalformedURLException {
+    public ResponseEntity<String> retrieveUrl(@RequestParam @NotBlank @ValidUrl String shortUrl)
+            throws MalformedURLException, NotFoundException {
 
         String shortLink = utils.retrieveShortLinkFromUrl(shortUrl);
 

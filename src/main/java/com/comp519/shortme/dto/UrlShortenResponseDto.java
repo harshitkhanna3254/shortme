@@ -1,16 +1,16 @@
 package com.comp519.shortme.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 /**
  * DTO for URL shortening response.
  */
 @Getter
 @Setter
-public class UrlShortenResponse {
+@AllArgsConstructor
+public class UrlShortenResponseDto {
 
     private String shortUrl;
     private String longUrl;

@@ -20,7 +20,7 @@ public class BigTableConfiguration {
     private String instanceId;
 
     /* Imported just to print. No use here */
-    @Value("${bigtable.tables.urlmappings}")
+    @Value("${bigtable.tables.testurlmappings}")
     private String urlMappingsTable;
 
     @Value("${bigtable.tables.urlmappings.family}")

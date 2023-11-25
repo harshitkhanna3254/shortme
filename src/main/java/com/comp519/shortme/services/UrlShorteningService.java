@@ -1,5 +1,6 @@
 package com.comp519.shortme.services;
 
+import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.bigtable.data.v2.BigtableDataClient;
 import com.google.cloud.bigtable.data.v2.models.RowMutation;
 import com.google.protobuf.ByteString;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Service
 public class UrlShorteningService {
 
-    @Value("${bigtable.tables.urlmappings}")
+    @Value("${bigtable.tables.testurlmappings}")
     private String urlMappingsTable;
 
     @Value("${bigtable.tables.urlmappings.family}")
@@ -38,8 +39,10 @@ public class UrlShorteningService {
     }
 
 
-    public String retrieveOriginalUrl(String shortCode) {
+    public String retrieveOriginalUrl(String shortCode) throws NotFoundException {
         // Implementation of URL retrieval
+
+
 
         return "Long URL";
     }
