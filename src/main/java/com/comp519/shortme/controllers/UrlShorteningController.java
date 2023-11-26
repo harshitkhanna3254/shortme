@@ -34,7 +34,7 @@ public class UrlShorteningController {
 
     // API to shorten a URL
     @PostMapping("/shorten")
-    public ResponseEntity<UrlShortenResponseDto> shortenUrl(@RequestBody @Valid UrlShortenRequestDto request) {
+    public ResponseEntity<UrlShortenResponseDto> shortenUrl(@RequestBody @Valid UrlShortenRequestDto request) throws Exception {
         String longUrl = request.getLongUrl();
 
         // Generate the short link
@@ -52,7 +52,7 @@ public class UrlShorteningController {
         // Response
         UrlShortenResponseDto response = new UrlShortenResponseDto(shortUrl, longUrl, timestamp);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // API to retrieve the original URL

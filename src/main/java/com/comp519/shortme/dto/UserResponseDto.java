@@ -14,6 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class UserResponseDto {
+
+    // JWT token
+    private String token;
+
+    // Fields for account_info
     private String username;
     private String firstName;
     private String lastName;

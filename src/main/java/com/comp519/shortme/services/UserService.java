@@ -16,15 +16,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
-
-import static com.comp519.shortme.dto.UserResponseDto.parseDate;
 
 
 @Service
@@ -50,7 +47,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerUser(UserRegisterRequestDto userRegisterRequestDto) throws Exception  {
+    public UserResponseDto registerUser(UserRegisterRequestDto userRegisterRequestDto) throws Exception  {
 
         String username = userRegisterRequestDto.getUsername();
 
@@ -62,7 +59,7 @@ public class UserService {
 
         String hashedPassword = passwordEncoder.encode(userRegisterRequestDto.getPassword());
 
-        // For saving created_at
+        // For saving `created_at`
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String createdAt = now.format(formatter);
@@ -75,23 +72,25 @@ public class UserService {
 
         bigtableDataClient.mutateRow(mutation);
 
-        System.out.println("User registered");
+        UserResponseDto userResponseDto = new UserResponseDto();
+        userResponseDto.setUsername(username);
+        userResponseDto.setFirstName(userRegisterRequestDto.getFirstName());
+        userResponseDto.setLastName(userRegisterRequestDto.getLastName());
+        userResponseDto.setCreatedAt(createdAt);
+
         // Return UserResponseDto
+        return userResponseDto;
     }
 
 
-    public UserResponseDto loginUser(UserLoginRequestDto userLoginRequestDto) throws UserNotFoundException, IOException, ExecutionException, InterruptedException {
+    public UserResponseDto loginUser(UserLoginRequestDto userLoginRequestDto) throws UserNotFoundException, ExecutionException, InterruptedException {
 
         String username = userLoginRequestDto.getUsername();
         String password = userLoginRequestDto.getPassword();
 
         Row userRow = getUserByUsernameAndPassword(username, password);
 
-        UserResponseDto userResponseDto = mapRowToUser(userRow);
-
-        System.out.println(userResponseDto);
-
-        return userResponseDto;
+        return mapRowToUser(userRow);
     }
 
     public Row getUserByUsernameAndPassword(String username, String password) throws ExecutionException, InterruptedException {
@@ -134,14 +133,14 @@ public class UserService {
         return userResponseDto;
     }
 
-    private void printRowDetails(Row row) {
-        System.out.println("Row Key: " + row.getKey().toStringUtf8());
-        row.getCells().forEach(cell -> {
-            String family = cell.getFamily();
-            String qualifier = cell.getQualifier().toStringUtf8();
-            String value = cell.getValue().toStringUtf8();
-
-            System.out.printf("Family: %s, Qualifier: %s, Value: %s%n", family, qualifier, value);
-        });
-    }
+//    private void printRowDetails(Row row) {
+//        System.out.println("Row Key: " + row.getKey().toStringUtf8());
+//        row.getCells().forEach(cell -> {
+//            String family = cell.getFamily();
+//            String qualifier = cell.getQualifier().toStringUtf8();
+//            String value = cell.getValue().toStringUtf8();
+//
+//            System.out.printf("Family: %s, Qualifier: %s, Value: %s%n", family, qualifier, value);
+//        });
+//    }
 }

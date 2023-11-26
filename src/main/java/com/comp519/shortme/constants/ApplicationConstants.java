@@ -16,7 +16,7 @@ public class ApplicationConstants {
     public static final String FORBIDDEN_MESSAGE = "Access denied. You do not have permission to access this resource.";
     public static final String NOT_FOUND_MESSAGE = "The requested resource was not found.";
     public static final String METHOD_NOT_ALLOWED_MESSAGE = "The requested HTTP method is not allowed for this resource.";
-
+    public static final String INVALID_JWT_MESSAGE = "The JWT token in invalid. Please Login to continue.";
     // Server Error Messages
     public static final String INTERNAL_SERVER_ERROR_MESSAGE = "An internal server error occurred. Please try again later.";
     public static final String SERVICE_UNAVAILABLE_MESSAGE = "The service is currently unavailable. Please try again later.";

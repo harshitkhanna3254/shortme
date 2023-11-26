@@ -1,13 +1,23 @@
 package com.comp519.shortme.utils;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.comp519.shortme.dto.ExceptionResponseDto;
 import com.comp519.shortme.exceptions.InvalidUrlException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static com.comp519.shortme.constants.ApplicationConstants.INVALID_JWT_MESSAGE;
 
 @Component
 public class Utils {

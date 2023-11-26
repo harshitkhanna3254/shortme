@@ -1,5 +1,6 @@
 package com.comp519.shortme.exceptions;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.comp519.shortme.dto.ExceptionResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,7 +69,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({IllegalArgumentException.class, JWTDecodeException.class})
     public ResponseEntity<ExceptionResponseDto> handleIllegalArgumentException(IllegalArgumentException ex) {
         ExceptionResponseDto errorResponse = new ExceptionResponseDto(
                 "Illegal Arguments",
@@ -77,6 +78,17 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ExceptionResponseDto> handleRuntimeException(RuntimeException ex) {
+        ExceptionResponseDto errorResponse = new ExceptionResponseDto(
+                "Internal Server Error",
+                "An unexpected error occurred: " + ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(Exception.class)
