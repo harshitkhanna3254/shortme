@@ -1,6 +1,7 @@
 package com.comp519.shortme.constants;
 
 public class ApplicationConstants {
+
     // Success Messages
     public static final String REGISTER_SUCCESSFUL_MESSAGE = "You've been successfully registered. Please log in now.";
     public static final String LOGIN_SUCCESSFUL_MESSAGE = "Login successful.";
@@ -20,6 +21,9 @@ public class ApplicationConstants {
     public static final String TOKEN_NOT_FOUND_MESSAGE = "There is no JWT Token present in the request.";
     public static final String INVALID_TOKEN_EXCEPTION = "The JWT token in invalid. Please Login to continue.";
 
+    // DTO Validation Messages
+    public static final String NOT_BLANK_MESSAGE = "The `longUrl` field cannot be blank";
+    public static final String INVALID_URL_MESSAGE = "The provided URL is invalid. It must start with `http://` or `https://` and it may or may not contain `www.`";
 
     // Server Error Messages
     public static final String INTERNAL_SERVER_ERROR_MESSAGE = "An internal server error occurred. Please try again later.";

@@ -11,9 +11,6 @@ import lombok.Getter;
 @Getter
 public class UserRegisterRequestDto {
 
-    final String NOT_BLANK_MESSAGE = "";
-    final String INVALID_USERNAME_MESSAGE = "";
-
     @NotBlank(message = "Username is required")
     @Size(min = 4, message = "Username must be at least 4 characters long")
     @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "Username can only contain alphanumeric characters")
