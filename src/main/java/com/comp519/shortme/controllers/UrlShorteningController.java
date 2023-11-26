@@ -1,7 +1,8 @@
 package com.comp519.shortme.controllers;
 
-import com.comp519.shortme.dto.UrlShortenRequestDto;
-import com.comp519.shortme.dto.UrlShortenResponseDto;
+import com.comp519.shortme.dto.AllUrlsResponseDto;
+import com.comp519.shortme.dto.UrlRequestDto;
+import com.comp519.shortme.dto.UrlResponseDto;
 import com.comp519.shortme.services.UrlShorteningService;
 import com.comp519.shortme.utils.Utils;
 import com.comp519.shortme.validators.ValidUrl;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/api")
@@ -34,40 +37,37 @@ public class UrlShorteningController {
 
     // API to shorten a URL
     @PostMapping("/shorten")
-    public ResponseEntity<UrlShortenResponseDto> shortenUrl(@RequestBody @Valid UrlShortenRequestDto request) throws Exception {
-        String longUrl = request.getLongUrl();
+    public ResponseEntity<UrlResponseDto> shortenUrl(@RequestBody @Valid UrlRequestDto request) throws Exception {
+        String longUrl = request.getUrl();
 
         // Generate the short link
         String shortLink = utils.generateShortLink();
 
         // Save to Big Table
-        String timestamp = urlShorteningService.saveUrlMapping(shortLink, longUrl);
+        UrlResponseDto urlResponseDto = urlShorteningService.saveUrlMapping(shortLink, longUrl);
 
-        // Convert Short Link to URL
-        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        String shortUrl = baseUrl + "/" + shortLink;
-
-        System.out.println("Short Url: " + shortUrl);
-
-        // Response
-        UrlShortenResponseDto response = new UrlShortenResponseDto(shortUrl, longUrl, timestamp);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(urlResponseDto);
     }
 
     // API to retrieve the original URL
     @GetMapping("/retrieve")
-    public ResponseEntity<String> retrieveUrl(@RequestParam @NotBlank @ValidUrl String shortUrl)
-            throws MalformedURLException, NotFoundException {
+    public ResponseEntity<UrlResponseDto> retrieveUrl(@ModelAttribute @Valid UrlRequestDto urlRequestDto)
+            throws MalformedURLException, NotFoundException, ExecutionException, InterruptedException {
 
+        String shortUrl = urlRequestDto.getUrl();
         String shortLink = utils.retrieveShortLinkFromUrl(shortUrl);
 
-        String longUrl = urlShorteningService.retrieveOriginalUrl(shortLink);
-
-        if (longUrl == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Short URL not found: " + shortUrl);
+        UrlResponseDto urlResponseDto = urlShorteningService.retrieveOriginalUrl(shortLink);
 
         // If the long URL is found, return it in the response.
-        return ResponseEntity.ok(longUrl);
+        return ResponseEntity.ok(urlResponseDto);
+    }
+
+    // API to get all the URLs of the current logged in user
+    @GetMapping("/retrieveAll")
+    public ResponseEntity<AllUrlsResponseDto> retrieveAllUrls() {
+        AllUrlsResponseDto allUrlsResponseDto = urlShorteningService.retrieveAllUrlsOfUser();
+
+        return ResponseEntity.ok(allUrlsResponseDto);
     }
 }

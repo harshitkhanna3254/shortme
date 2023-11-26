@@ -9,13 +9,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import static com.comp519.shortme.constants.ApplicationConstants.INVALID_JWT_MESSAGE;
 
@@ -33,9 +36,18 @@ public class Utils {
         String path = url.getPath();
 
         // Remove the leaving `/`
-        String shortLink = path.substring(1);
+        return path.substring(1);
+    }
 
-        return shortLink;
+    public static String convertShortLinkToUrl(String shortLink) {
+        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        return baseUrl + "/" + shortLink;
+    }
+
+    public static List<String> convertShortLinksToUrls(List<String> shortLinks) {
+        return shortLinks.stream()
+                .map(Utils::convertShortLinkToUrl)
+                .collect(Collectors.toList());
     }
 
     private final String BASE_62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";

@@ -36,12 +36,34 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UrlNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDto> handleUserNotFoundException(UrlNotFoundException ex) {
+        ExceptionResponseDto errorResponse = new ExceptionResponseDto(
+                "URL not found in your created URLs.",
+                ex.getMessage(),
+                HttpStatus.NOT_FOUND.value()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UrlNotCreatedByUser.class)
+    public ResponseEntity<ExceptionResponseDto> handleUserNotFoundException(UrlNotCreatedByUser ex) {
+        ExceptionResponseDto errorResponse = new ExceptionResponseDto(
+                "The requested URL was not created by you.",
+                ex.getMessage(),
+                HttpStatus.FORBIDDEN.value()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ExceptionResponseDto> handleUserNotFoundException(UserNotFoundException ex) {
         ExceptionResponseDto errorResponse = new ExceptionResponseDto(
                 "User not found in the database",
                 ex.getMessage(),
-                HttpStatus.BAD_REQUEST.value()
+                HttpStatus.NOT_FOUND.value()
         );
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);

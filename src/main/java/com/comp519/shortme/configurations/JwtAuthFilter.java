@@ -1,9 +1,11 @@
 package com.comp519.shortme.configurations;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.comp519.shortme.constants.ApplicationConstants;
 import com.comp519.shortme.dto.ExceptionResponseDto;
+import com.comp519.shortme.exceptions.TokenNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,11 +19,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.comp519.shortme.constants.ApplicationConstants.*;
+
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final UserAuthProvider userAuthProvider;
-    private final String INVALID_JWT_MESSAGE = ApplicationConstants.INVALID_JWT_MESSAGE;
 
     @Override
     protected void doFilterInternal(
@@ -33,8 +36,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (header != null) {
             String[] authElements = header.split(" ");
 
-            if (authElements.length == 2
-                    && "Bearer".equals(authElements[0])) {
+            if(authElements.length != 2)
+                throw new JWTVerificationException(INVALID_TOKEN_EXCEPTION);
+
+            if ("Bearer".equals(authElements[0])) {
                 try {
                     SecurityContextHolder.getContext().setAuthentication(
                             userAuthProvider.validateToken(authElements[1]));

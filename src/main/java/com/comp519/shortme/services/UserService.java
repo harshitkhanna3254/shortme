@@ -120,6 +120,7 @@ public class UserService {
         mappingStrategies.put(lastNameQualifier, userResponseDto::setLastName);
         mappingStrategies.put(createdAtQualifier, userResponseDto::setCreatedAt);
 
+        // Iterate over the cells in the row and apply the mapping strategies
         row.getCells().forEach(cell -> {
             String qualifier = cell.getQualifier().toStringUtf8();
             String value = cell.getValue().toStringUtf8();
