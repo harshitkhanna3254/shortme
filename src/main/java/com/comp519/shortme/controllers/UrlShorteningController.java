@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -26,7 +27,6 @@ import java.util.concurrent.ExecutionException;
 public class UrlShorteningController {
 
     private final UrlShorteningService urlShorteningService;
-
     private final Utils utils;
 
     @Autowired

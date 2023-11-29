@@ -112,6 +112,17 @@ public class UrlShorteningService {
         return urlResponseDto;
     }
 
+    public UrlResponseDto retrieveOriginalUrlWithoutAuth(String shortCode) throws NotFoundException, ExecutionException, InterruptedException {
+        Row row = bigtableDataClient.readRowAsync(urlMappingsTable, ByteString.copyFromUtf8(shortCode)).get();
+
+        if(row == null)
+            throw new UrlNotFoundException(NOT_FOUND_MESSAGE);
+
+        UrlResponseDto urlResponseDto = mapRowToUrlData(row);
+
+        return urlResponseDto;
+    }
+
     public AllUrlsResponseDto retrieveAllUrlsOfUser() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
