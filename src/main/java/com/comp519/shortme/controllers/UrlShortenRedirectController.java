@@ -35,7 +35,6 @@ public class UrlShortenRedirectController {
         if (originalUrl == null)
             return ResponseEntity.notFound().build();
 
-
         // Redirect to the original URL
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(originalUrl))
