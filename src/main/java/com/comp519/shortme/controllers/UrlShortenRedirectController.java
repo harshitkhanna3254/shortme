@@ -1,6 +1,7 @@
 package com.comp519.shortme.controllers;
 
 import com.comp519.shortme.dto.UrlResponseDto;
+import com.comp519.shortme.services.AnalyticsService;
 import com.comp519.shortme.services.UrlShorteningService;
 import com.google.api.gax.rpc.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,11 @@ import java.util.concurrent.ExecutionException;
 public class UrlShortenRedirectController {
 
     private final UrlShorteningService urlShorteningService;
+    private final AnalyticsService analyticsService;
 
-    public UrlShortenRedirectController(UrlShorteningService urlShorteningService) {
+    public UrlShortenRedirectController(UrlShorteningService urlShorteningService, AnalyticsService analyticsService) {
         this.urlShorteningService = urlShorteningService;
+        this.analyticsService = analyticsService;
     }
 
     // API to redirect user to the long url
@@ -34,6 +37,8 @@ public class UrlShortenRedirectController {
         // If the original URL is not found, return a 404 error
         if (originalUrl == null)
             return ResponseEntity.notFound().build();
+
+        analyticsService.updateAnalytics(shortLink);
 
         // Redirect to the original URL
         return ResponseEntity.status(HttpStatus.FOUND)

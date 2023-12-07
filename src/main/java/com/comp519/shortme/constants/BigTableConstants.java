@@ -33,6 +33,11 @@ public class BigTableConstants {
     // User Data Column Family
     public static final String USERNAME_QUALIFIER = "username";
 
+    // Analytics Data Column Family
+    public static final String CLICK_COUNT_QUALIFIER = "click_count";
+    public static final String TIMESTAMPS_QUALIFIER = "timestamps";
+
+
 
     /*
         =======================================================

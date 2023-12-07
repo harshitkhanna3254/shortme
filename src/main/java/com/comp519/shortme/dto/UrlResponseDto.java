@@ -16,4 +16,6 @@ public class UrlResponseDto {
     private String longUrl;
     private String createdAt;
     private String username;
+    private String clickCount;
+    private String timestamps;
 }

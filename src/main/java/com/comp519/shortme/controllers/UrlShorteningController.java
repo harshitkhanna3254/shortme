@@ -1,6 +1,7 @@
 package com.comp519.shortme.controllers;
 
 import com.comp519.shortme.dto.AllUrlsResponseDto;
+import com.comp519.shortme.dto.DataResponseDTO;
 import com.comp519.shortme.dto.UrlRequestDto;
 import com.comp519.shortme.dto.UrlResponseDto;
 import com.comp519.shortme.services.UrlShorteningService;
@@ -61,6 +62,12 @@ public class UrlShorteningController {
 
         // If the long URL is found, return it in the response.
         return ResponseEntity.ok(urlResponseDto);
+    }
+
+    @GetMapping("/retrieveData")
+    public ResponseEntity<DataResponseDTO> retrieveData() throws Exception {
+        DataResponseDTO dataResponseDTO = urlShorteningService.fetchUrlData();
+        return ResponseEntity.ok(dataResponseDTO);
     }
 
     // API to get all the URLs of the current logged in user
